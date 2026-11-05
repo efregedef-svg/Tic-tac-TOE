@@ -1,0 +1,153 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    color-scheme: dark;
+    -webkit-tap-highlight-color: transparent;
+    background: #05040d;
+  }
+  body {
+    @apply min-h-screen bg-ink-950 font-sans text-slate-100 antialiased;
+  }
+  ::selection {
+    background: rgba(139, 92, 246, 0.45);
+  }
+}
+
+@layer components {
+  .glass {
+    @apply border border-white/10 bg-white/[0.04] shadow-[0_8px_32px_rgba(0,0,0,0.35)] backdrop-blur-xl;
+  }
+  .glass-strong {
+    @apply border border-white/10 bg-ink-800/60 shadow-[0_24px_70px_-12px_rgba(0,0,0,0.7)] backdrop-blur-2xl;
+  }
+
+  .btn {
+    @apply inline-flex select-none items-center justify-center gap-2 rounded-2xl font-semibold transition-all duration-200
+      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400/70 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950
+      active:scale-[0.97] disabled:pointer-events-none disabled:opacity-40;
+  }
+  .btn-primary {
+    @apply btn bg-gradient-to-r from-violet-600 via-indigo-500 to-sky-500 px-6 py-3.5 text-white shadow-glow hover:shadow-glow-lg hover:brightness-110;
+  }
+  .btn-ghost {
+    @apply btn border border-white/10 bg-white/5 px-5 py-3 text-slate-200 hover:border-white/20 hover:bg-white/10 hover:text-white;
+  }
+  .btn-danger {
+    @apply btn border border-rose-400/20 bg-rose-500/10 px-4 py-2.5 text-sm text-rose-200 hover:bg-rose-500/20;
+  }
+  .icon-btn {
+    @apply btn h-11 w-11 rounded-xl border border-white/10 bg-white/5 text-slate-300 hover:bg-white/10 hover:text-white;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-sky-300 via-violet-300 to-fuchsia-300 bg-clip-text text-transparent;
+  }
+  .label {
+    @apply text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400;
+  }
+  .input {
+    @apply w-full rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3 text-slate-100 placeholder:text-slate-500
+      transition focus:border-violet-400/60 focus:bg-white/[0.06] focus:outline-none focus:ring-4 focus:ring-violet-500/15;
+  }
+}
+
+@layer utilities {
+  .bg-grid {
+    background-image: linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+  .glow-x {
+    filter: drop-shadow(0 0 6px rgba(34, 211, 238, 0.55)) drop-shadow(0 0 18px rgba(59, 130, 246, 0.35));
+  }
+  .glow-o {
+    filter: drop-shadow(0 0 6px rgba(232, 121, 249, 0.55)) drop-shadow(0 0 18px rgba(139, 92, 246, 0.35));
+  }
+}
+
+/* Stroke-drawing animation for X / O marks and the winning line (paths use pathLength="1"). */
+.draw-path {
+  stroke-dasharray: 1;
+  animation: draw-stroke 0.38s cubic-bezier(0.65, 0, 0.35, 1) both;
+}
+@keyframes draw-stroke {
+  0% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+.win-line {
+  animation-duration: 0.55s;
+  animation-delay: 0.15s;
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6));
+}
+
+/* Custom range slider */
+input[type='range'].slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #8b5cf6 var(--fill), rgba(255, 255, 255, 0.1) var(--fill));
+  outline: none;
+}
+input[type='range'].slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.35), 0 4px 12px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+input[type='range'].slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border: none;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.35), 0 4px 12px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+input[type='range'].slider:disabled {
+  opacity: 0.4;
+}
+
+/* Game screen layout: stacked on mobile, board + sidebar on desktop. */
+.game-layout {
+  display: grid;
+  gap: 1.25rem;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: 'score' 'board' 'controls' 'recent';
+}
+@media (min-width: 1024px) {
+  .game-layout {
+    grid-template-columns: minmax(0, 1fr) 380px;
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas: 'board score' 'board controls' 'board recent';
+    column-gap: 3rem;
+    row-gap: 1.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
